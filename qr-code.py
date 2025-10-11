@@ -17,7 +17,7 @@ qr.make(fit=True)
 img = qr.make_image(fill_color="black", back_color="white")
 
 try:
-    logo = Image.open("logo.png")  # Eğer logo eklemek istersen
+    logo = Image.open("logo.png")
     logo_size = 60
     logo = logo.resize((logo_size, logo_size))
     pos = ((img.size[0]-logo_size)//2, (img.size[1]-logo_size)//2)
