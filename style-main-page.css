@@ -104,7 +104,7 @@ header {
     border-radius: 1rem;
     transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
     margin-bottom: 1.5rem;
-    will-change: transform; /* Performans optimizasyonu */
+    will-change: transform;
 }
 .glass-card:hover {
     border-color: var(--neon-orange);
