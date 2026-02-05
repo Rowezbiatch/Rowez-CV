@@ -1,1 +1,1 @@
-https://deniz-yalcin-cv.netlify.app/
+https://rowez-cv.netlify.app/
