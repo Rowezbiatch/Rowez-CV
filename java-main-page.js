@@ -1,101 +1,74 @@
-'use strict';
 
-document.addEventListener('DOMContentLoaded', () => {
-
-    if (document.getElementById('particles-js')) {
-        particlesJS('particles-js', {
-            particles: {
-                number: { value: 60, density: { enable: true, value_area: 800 } },
-                color: { value: "#ffffff" },
-                shape: { type: "circle" },
-                opacity: { value: 0.4, random: true },
-                size: { value: 2, random: true },
-                line_linked: { enable: true, distance: 150, color: "#8A2387", opacity: 0.2, width: 1 },
-                move: { enable: true, speed: 2, direction: "none", random: true, straight: false, out_mode: "out" }
+        // 1. Particles.js Config
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": "#ffffff" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.5, "random": true },
+                "size": { "value": 3, "random": true },
+                "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.4, "width": 1 },
+                "move": { "enable": true, "speed": 2, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false }
             },
-            interactivity: {
-                detect_on: "canvas",
-                events: { onhover: { enable: true, mode: "grab" }, onclick: { enable: true, mode: "push" }, resize: true },
-                modes: { grab: { distance: 140, line_opacity: 0.5 }, push: { particles_nb: 4 } }
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": { "enable": true, "mode": "repulse" },
+                    "onclick": { "enable": true, "mode": "push" },
+                    "resize": true
+                }
             },
-            retina_detect: true
+            "retina_detect": true
         });
-    }
 
-    const revealElements = document.querySelectorAll('.reveal');
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('active');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.1 });
-    revealElements.forEach(el => observer.observe(el));
-
-    const subtitleElement = document.getElementById('subtitle');
-    if (subtitleElement) {
-        const texts = ["Full Stack Developer Öğrencisi", "AI Enthusiast", "Modern Çözüm Üreticisi"];
+        // 2. Typing Effect
+        const textElement = document.getElementById("typewriter");
+        const texts = ["Full Stack Developer Öğrencisi", "Yapay Zeka Meraklısı", "Python & JS Geliştiricisi"];
         let textIndex = 0;
         let charIndex = 0;
         let isDeleting = false;
 
         function type() {
             const currentText = texts[textIndex];
-            let displayText = '';
-
+            
             if (isDeleting) {
-                displayText = currentText.substring(0, charIndex - 1);
+                textElement.textContent = currentText.substring(0, charIndex - 1);
                 charIndex--;
             } else {
-                displayText = currentText.substring(0, charIndex + 1);
+                textElement.textContent = currentText.substring(0, charIndex + 1);
                 charIndex++;
             }
-            
-            subtitleElement.textContent = displayText;
-            subtitleElement.style.borderRight = '2px solid var(--neon-orange)';
-
-
-            let typeSpeed = isDeleting ? 75 : 150;
 
             if (!isDeleting && charIndex === currentText.length) {
-                typeSpeed = 2000; 
                 isDeleting = true;
-                subtitleElement.style.borderRight = 'none';
+                setTimeout(type, 2000); // Wait before deleting
             } else if (isDeleting && charIndex === 0) {
                 isDeleting = false;
                 textIndex = (textIndex + 1) % texts.length;
-                typeSpeed = 500; 
+                setTimeout(type, 500); // Wait before typing next
+            } else {
+                setTimeout(type, isDeleting ? 50 : 100);
             }
-
-            setTimeout(type, typeSpeed);
         }
-        type();
-    }
 
-    const interactiveCards = document.querySelectorAll('.interactive-card');
-    interactiveCards.forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            const { width, height } = rect;
+        document.addEventListener('DOMContentLoaded', type);
 
-            const rotateX = (y / height - 0.5) * -15; 
-            const rotateY = (x / width - 0.5) * 15;   
+        // 3. Scroll Reveal Animation
+        const revealElements = document.querySelectorAll(".reveal");
 
-            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
-        });
+        const revealOnScroll = () => {
+            const windowHeight = window.innerHeight;
+            const elementVisible = 150;
 
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
-        });
-    });
+            revealElements.forEach((reveal) => {
+                const elementTop = reveal.getBoundingClientRect().top;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveal.classList.add("active");
+                }
+            });
+        };
 
-    const originalTitle = document.title;
-    document.addEventListener('visibilitychange', () => {
-        document.title = document.hidden ? 'Geri Dön! 👋' : originalTitle;
-    });
+        window.addEventListener("scroll", revealOnScroll);
+        // Trigger once on load
+        revealOnScroll();
 
-    console.log("Portfolyo yüklendi. Tüm interaktif özellikler aktif.");
-});
